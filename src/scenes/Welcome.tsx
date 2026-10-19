@@ -3,6 +3,7 @@ import { Pixel } from '../components/Pixel';
 import { sprites } from '../components/sprites';
 import { StarField } from '../components/StarField';
 import { Seal } from '../components/Seal';
+import { TwinkleDecoration } from '../components/TwinkleDecoration';
 import { usePointerParallax, usePrefersReducedMotion } from '../lib/hooks';
 import { twinkle } from '../content/twinkle';
 import { mediaUrl } from '../lib/assetUrl';
@@ -25,8 +26,6 @@ export function Welcome() {
       <div className="welcome__sprites" aria-hidden="true">
         <Pixel art={sprites.moon} size={7} className="ws ws--moon" />
         <Pixel art={sprites.star} size={4} className="ws ws--star1" />
-        <Pixel art={sprites.star} size={3} className="ws ws--star2" />
-        <Pixel art={sprites.heart} size={4} className="ws ws--heart" />
         <Pixel art={sprites.sparkle} size={4} className="ws ws--sp1" />
         <Pixel art={sprites.sparkle} size={3} className="ws ws--sp2" />
       </div>
@@ -51,6 +50,8 @@ export function Welcome() {
           {site.welcome.cta}
         </button>
       </div>
+
+      <TwinkleDecoration slot="welcome" />
 
       <div className="welcome__seal" aria-hidden="true">
         <Seal size={58} />

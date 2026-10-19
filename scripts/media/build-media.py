@@ -89,6 +89,23 @@ VIDEOS = [
     ('m-15', 'beginning/682bb174a7624f8e9c4b072f4ae6695d.MOV'),
     ('m-20', 'thailand_2025/ff59aaaf873545e8a1a0a378ece691e7.mov'),
 ]
+# The 13 small Twinkle Twinkle figures (already cut out). out id -> file name inside content-source/twinkle-twinkle-crush-on-you/
+FIGURES = {
+    'secret-sweet-memories': '1768558213194____secret_sweet-memories____.png.webp',
+    'nerdy-cupid': '1768558222047____nerdy-cupid____.png.webp',
+    'when-you-call': '1768558230721____when-you-call____.png.webp',
+    'i-hear-you': '1768558240374____i-hear-you____.png.webp',
+    'blushing-moment': '1768558249363____blushing-moment____.png.webp',
+    'candy-words': '1768558259828____candy-words____.png.webp',
+    'heart-unlocked': '1768558268536____heart-unlocked____.png.webp',
+    'light-up': '1768558276858____light-up____.png.webp',
+    'albatross-vow': '1768558285630____albatross-s-vow____.png.webp',
+    'flower-bearer': '1768558294609____flower-bearer____.png.webp',
+    'hold-myself-with-love': '1768558304893____hold-myself-with-love____.png.webp',
+    'grow-grey-together': '1768558315716____grow-grey-together____.png.webp',
+    'till-were-old': '1768558324627____till-we-re-old____.png.webp',
+}
+
 POSTER_AT = {'m-10': 0.5}   # seconds, default 1.0
 
 SRGB = ImageCms.createProfile('sRGB')
@@ -176,6 +193,24 @@ def main():
         im.save(couple, 'WEBP', quality=92, method=6)
         manifest['figures/couple.webp'] = {'w': im.size[0], 'h': im.size[1]}
         print('figure couple.webp', im.size)
+
+    # Small Twinkle figures: drop the faint baked-in watermark (alpha <= 30), trim empty margins, keep colours as-is.
+    for fid, fname in FIGURES.items():
+        out = os.path.join(OUT, 'figures', 'twinkle', f'{fid}.webp')
+        key = f'figures/twinkle/{fid}.webp'
+        if not FORCE and os.path.exists(out) and key in manifest:
+            continue
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        im = Image.open(os.path.join(SRC, 'twinkle-twinkle-crush-on-you', fname)).convert('RGBA')
+        alpha = im.getchannel('A').point(lambda v: 0 if v <= 30 else v)
+        im.putalpha(alpha)
+        im = im.crop(alpha.getbbox())
+        pad = 4
+        canvas = Image.new('RGBA', (im.width + 2 * pad, im.height + 2 * pad), (0, 0, 0, 0))
+        canvas.alpha_composite(im, (pad, pad))
+        canvas.save(out, 'WEBP', quality=94, method=6)
+        manifest[key] = {'w': canvas.width, 'h': canvas.height}
+        print(f'figure {fid:24s} {canvas.width}x{canvas.height}  {os.path.getsize(out)//1024}KB')
 
     # The "mình" tattoo design -> transparent seal (red ink on transparent), used instead of a drawn logo
     seal = os.path.join(OUT, 'figures', 'seal.webp')

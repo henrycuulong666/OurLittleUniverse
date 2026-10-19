@@ -50,6 +50,8 @@ export interface Chapter {
   date?: string;
   /** Show the wedding countdown banner under the chapter (used by the 'arches' layout). */
   countdown?: boolean;
+  /** 'feature' = bigger, slower entrance for the moments that matter. Default 'quiet'. */
+  emphasis?: 'quiet' | 'feature';
   layout: ChapterLayout;
   /** Which pixel icon decorates the chapter. */
   icon: 'star' | 'heart' | 'ring' | 'hat' | 'bow';
@@ -59,6 +61,8 @@ export interface Chapter {
 }
 
 export interface ChapterGroup {
+  /** Optional figure slot (see content/figures.ts) shown beside the label. */
+  slot?: string;
   title: string;
   date?: string;
   text?: string;

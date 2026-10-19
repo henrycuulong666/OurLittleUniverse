@@ -29,6 +29,14 @@ export const site = {
     blurb: 'Hai bé này ở nhà vẫn ngoan hông? Chạm vào từng bé coi.',
   },
 
+  /** Scene 4b — the little ones on the shelf. */
+  shelf: {
+    eyebrow: 'the little ones',
+    title: 'Đủ bộ 13 bé',
+    blurb: 'Bé nào cũng có tên riêng. Chạm vô coi.',
+    swipe: 'vuốt ngang để xem đủ bộ',
+  },
+
   /** Scene 5 — the gift. Edit `message` freely; each string is one line. */
   surprise: {
     eyebrow: 'a little surprise',
@@ -64,12 +72,14 @@ export const site = {
   },
 
   /**
-   * Optional background music. Leave `src` empty to hide the toggle entirely.
-   * Put your file in public/media/audio/ and set e.g. src: 'audio/our-song.mp3'.
-   * Only use music you have the rights to — don't ship commercial tracks.
+   * Background music: ONE local audio file, off until the listener taps the vinyl (top-right).
+   * Default is an original music-box loop synthesized by scripts/media/make-music-box.py
+   * (public-domain melody, no samples). To use your own track, put a file you have the rights to
+   * in public/media/audio/ and change `src`. Leave `src` empty to hide the player.
+   * (No YouTube/streaming: embeds can play ads, and ripping audio from YouTube isn't allowed.)
    */
   music: {
-    src: '' as string,
+    src: 'audio/music-box.m4a' as string,
     label: 'Nhạc nền',
     volume: 0.5,
   },

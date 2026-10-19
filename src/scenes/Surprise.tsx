@@ -5,8 +5,9 @@ import { sprites } from '../components/sprites';
 import { Reveal } from '../components/Reveal';
 import { StarField } from '../components/StarField';
 import { usePrefersReducedMotion } from '../lib/hooks';
+import { TwinkleDecoration } from '../components/TwinkleDecoration';
 
-type Phase = 'idle' | 'shake' | 'open';
+type Phase = 'idle' | 'shake' | 'open' | 'letter';
 const COLORS = ['#f8d878', '#fff7e0', '#d3303f', '#ebddbc', '#f8d878'];
 
 function GiftBox() {
@@ -29,6 +30,13 @@ function GiftBox() {
       </defs>
       <ellipse cx="120" cy="238" rx="84" ry="9" fill="rgba(0,0,0,.35)" />
       <ellipse className="gift__glow" cx="120" cy="104" rx="120" ry="82" fill="url(#gGlow)" />
+
+      {/* letter sheet: sits inside the box, rises out when the lid opens */}
+      <g className="gift__paper">
+        <rect x="82" y="96" width="76" height="96" rx="5" fill="var(--cream)" stroke="var(--champagne-deep)" strokeWidth="2" />
+        <path d="M94 116h52M94 128h52M94 140h38" stroke="var(--champagne)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M130 156c-4-6-12-2-8 5l8 8 8-8c4-7-4-11-8-5z" fill="var(--cherry)" />
+      </g>
 
       {/* body */}
       <rect x="44" y="108" width="152" height="122" rx="13" fill="url(#gBody)" stroke="var(--champagne-deep)" strokeWidth="2" />
@@ -63,7 +71,8 @@ export function Surprise() {
   const burst = useRef<HTMLDivElement>(null);
   const msg = useRef<HTMLDivElement>(null);
   const timers = useRef<number[]>([]);
-  const opened = phase === 'open';
+  const opened = phase === 'open' || phase === 'letter';
+  const letterOpen = phase === 'letter';
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
@@ -97,16 +106,18 @@ export function Surprise() {
 
   const openGift = () => {
     if (phase !== 'idle') return;
-    setPhase(reduced ? 'open' : 'shake');
-    const t1 = window.setTimeout(
-      () => {
-        setPhase('open');
-        confetti();
-        const t2 = window.setTimeout(() => msg.current?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' }), 700);
-        timers.current.push(t2);
-      },
-      reduced ? 0 : 650,
-    );
+    setPhase(reduced ? 'letter' : 'shake');
+    if (reduced) return;
+    const t1 = window.setTimeout(() => {
+      setPhase('open'); // lid lifts, glow, sparkles, the sheet rises out of the box
+      confetti();
+      const t2 = window.setTimeout(() => {
+        setPhase('letter'); // sheet settles into the readable letter
+        const t3 = window.setTimeout(() => msg.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+        timers.current.push(t3);
+      }, 1250);
+      timers.current.push(t2);
+    }, 650);
     timers.current.push(t1);
   };
 
@@ -116,7 +127,7 @@ export function Surprise() {
   };
 
   return (
-    <section id="surprise" className={`scene scene--dark surprise is-${phase}`} aria-labelledby="surprise-title">
+    <section id="surprise" className={`scene scene--dark surprise is-${phase} ${opened ? 'is-opened' : ''}`} aria-labelledby="surprise-title">
       <div className="scallop scallop--up scallop--night" aria-hidden="true" />
       <StarField count={48} seed={23} />
       <div className="wrap wrap--narrow surprise__inner">
@@ -131,6 +142,7 @@ export function Surprise() {
           <div className="gift">
             <div className="gift__burst" ref={burst} aria-hidden="true" />
             <GiftBox />
+            <TwinkleDecoration slot="surprise" />
           </div>
         </Reveal>
 
@@ -142,9 +154,9 @@ export function Surprise() {
           </Reveal>
         )}
 
-        <div className="msgbox" data-open={opened} ref={msg}>
+        <div className="msgbox" data-open={letterOpen} ref={msg}>
           <div className="msgbox__clip" aria-live="polite">
-            <div className="letter" aria-hidden={!opened}>
+            <div className="letter" aria-hidden={!letterOpen}>
               <Pixel art={sprites.heart} size={3} className="letter__heart letter__heart--l" />
               <p className="letter__text">
                 {site.surprise.message.map((line, i) => (
@@ -155,7 +167,7 @@ export function Surprise() {
               </p>
               <Pixel art={sprites.star} size={3} className="letter__heart letter__heart--r" />
             </div>
-            <button type="button" className="linkbtn" onClick={again} tabIndex={opened ? 0 : -1}>
+            <button type="button" className="linkbtn" onClick={again} tabIndex={letterOpen ? 0 : -1}>
               {site.surprise.replay} ↺
             </button>
           </div>

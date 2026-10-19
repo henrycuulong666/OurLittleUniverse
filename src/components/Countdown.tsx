@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { site } from '../content/site';
 import { Pixel } from './Pixel';
+import { TwinkleDecoration } from './TwinkleDecoration';
 import { sprites } from './sprites';
 
 const target = new Date(site.wedding.at).getTime();
@@ -25,6 +26,7 @@ export function Countdown() {
 
   return (
     <div className="count" role="timer" aria-label={over ? site.wedding.done : `Còn ${d} ngày nữa là đến đám cưới ${site.wedding.label}`}>
+      <TwinkleDecoration slot="countdown" />
       <div className="count__head">
         <Pixel art={sprites.bow} size={3} />
         <span>

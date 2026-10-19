@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { MediaItem } from '../content/types';
 import { mediaUrl } from '../lib/assetUrl';
 import { Placeholder } from './Media';
+import { useVideoDuck } from '../lib/music';
 
 interface LightboxApi {
   open: (items: MediaItem[], index: number) => void;
@@ -54,6 +55,7 @@ function Viewer({ items, start, onClose }: { items: MediaItem[]; start: number; 
   const closeRef = useRef<HTMLButtonElement>(null);
   const drag = useRef<{ x: number; y: number; t: number } | null>(null);
   const [dragDx, setDragDx] = useState(0);
+  const duck = useVideoDuck();
   const item = items[index];
   const many = items.length > 1;
 
@@ -171,6 +173,9 @@ function Viewer({ items, start, onClose }: { items: MediaItem[]; start: number; 
               controls
               playsInline
               preload="metadata"
+              onPlay={duck.onPlay}
+              onPause={duck.onPause}
+              onEnded={duck.onEnded}
               onError={() => setFailed(true)}
             />
           )

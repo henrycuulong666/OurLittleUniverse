@@ -1,5 +1,6 @@
 import { LightboxProvider } from './components/Lightbox';
-import { MusicToggle } from './components/MusicToggle';
+import { MusicPlayer } from './components/MusicPlayer';
+import { MusicProvider } from './lib/music';
 import { SceneNav } from './components/SceneNav';
 import { End } from './scenes/End';
 import { Moments } from './scenes/Moments';
@@ -14,9 +15,10 @@ import { Welcome } from './scenes/Welcome';
  */
 export default function App() {
   return (
+    <MusicProvider>
     <LightboxProvider>
       <SceneNav />
-      <MusicToggle />
+      <MusicPlayer />
       <main>
         <Welcome />
         <Story />
@@ -26,5 +28,6 @@ export default function App() {
         <End />
       </main>
     </LightboxProvider>
+    </MusicProvider>
   );
 }

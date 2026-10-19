@@ -44,6 +44,7 @@ export const chapters: Chapter[] = [
     title: 'She said yes!',
     date: 'Tháng 12/2025',
     blurb: 'Bí mật, không có kể cho ai nghe à',
+    emphasis: 'feature',
     layout: 'spotlight',
     icon: 'ring',
     media: [
@@ -53,6 +54,7 @@ export const chapters: Chapter[] = [
     ],
     groups: [
       {
+        slot: 'dress',
         title: 'Đi thử váy cưới',
         date: '4/10/2026',
         text: 'Chảy nước mín',
@@ -70,6 +72,7 @@ export const chapters: Chapter[] = [
     number: '04',
     title: 'Bx hơm giỏi quá he',
     blurb: 'Năm nay vừa làm bà chủ vừa đậu thạc sĩ, vừa mới lấy bằng lái xe luôn he. Zỗ tay',
+    emphasis: 'feature',
     layout: 'milestones',
     icon: 'hat',
     media: [],
@@ -102,6 +105,7 @@ export const chapters: Chapter[] = [
     date: 'Lễ dạm ngõ · 27/4/2026',
     countdown: true,
     blurb: 'Hai bên gia đình gặp nhau xong, chính thức luôn rồi nha. Giờ đếm ngược tới ngày cưới nè.',
+    emphasis: 'feature',
     layout: 'arches',
     icon: 'bow',
     media: [

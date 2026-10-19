@@ -12,6 +12,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components.css';
 import './styles/scenes.css';
+import './styles/figures.css';
 import App from './App';
 
 // Always start at the opening scene on reload, so the intro plays every time.

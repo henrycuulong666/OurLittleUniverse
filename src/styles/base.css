@@ -88,7 +88,7 @@ h3 {
 /* ───────── scenes & layout ───────── */
 .scene {
   position: relative;
-  padding: clamp(84px, 16vw, 150px) var(--gutter);
+  padding: clamp(60px, 11vw, 120px) var(--gutter);
 }
 .scene--dark {
   background: var(--night);
@@ -160,6 +160,18 @@ h3 {
 .reveal--fade {
   transform: none;
 }
+/* quiet: ordinary photos — short and light */
+.reveal--quiet {
+  transform: translate3d(0, 12px, 0);
+  transition-duration: 0.55s;
+}
+/* feature: the moments that matter — bigger, slower, settles with a tiny overshoot */
+.reveal--feature {
+  transform: translate3d(0, 30px, 0) scale(0.9) rotate(-1.6deg);
+  transition:
+    opacity 0.7s ease var(--d, 0s),
+    transform 1.1s cubic-bezier(0.25, 1.35, 0.4, 1) var(--d, 0s);
+}
 .reveal.is-in {
   opacity: 1;
   transform: none;
@@ -177,7 +189,7 @@ h3 {
   color: var(--butter);
 }
 .shead {
-  margin-bottom: clamp(48px, 9vw, 90px);
+  margin-bottom: clamp(30px, 6vw, 64px);
 }
 .shead--center {
   text-align: center;

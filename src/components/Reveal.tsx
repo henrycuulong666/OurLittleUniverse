@@ -5,7 +5,7 @@ interface RevealProps {
   as?: ElementType;
   /** Seconds. Use small steps (0.08) to stagger siblings. */
   delay?: number;
-  variant?: 'rise' | 'pop' | 'left' | 'right' | 'fade';
+  variant?: 'rise' | 'pop' | 'left' | 'right' | 'fade' | 'quiet' | 'feature';
   className?: string;
   style?: CSSProperties;
   children: ReactNode;

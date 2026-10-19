@@ -447,21 +447,27 @@
 .music {
   position: fixed;
   top: calc(14px + var(--safe-top));
-  right: 14px;
+  right: calc(14px + env(safe-area-inset-right, 0px));
   z-index: 85;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border: 2px solid var(--charcoal);
   border-radius: 50%;
   background: var(--cream);
-  color: var(--charcoal);
   box-shadow: 2px 2px 0 var(--charcoal);
-  transition: background 0.2s, color 0.2s, transform 0.15s;
+  transition: transform 0.15s, background 0.2s;
 }
 .music:active { transform: translate(2px, 2px); box-shadow: none; }
-.music.is-on { background: var(--cherry); color: var(--cream); }
+.music.is-on { background: var(--butter); }
+.music__disc { flex: none; width: 38px; height: 38px; max-width: none; transition: transform 0.4s; }
+.music.is-on .music__disc { animation: spin 5s linear infinite; }
+.music.is-blocked { animation: shakeNo 0.5s; }
+.music__note { position: absolute; top: -12px; right: -6px; font-size: 1.1rem; color: var(--cherry); animation: noteUp 2.4s ease-out infinite; pointer-events: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes noteUp { 0% { opacity: 0; transform: translate(0, 8px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(6px, -12px); } }
+@keyframes shakeNo { 0%, 100% { transform: none; } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
 
 /* ═════════ Shared keyframes ═════════ */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
