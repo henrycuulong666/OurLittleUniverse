@@ -14,7 +14,7 @@ It also writes src/content/media-manifest.json (real pixel sizes, so the page re
 
 To use a different photo: edit SELECTION below, run the script, then reference the new name in src/content/*.ts.
 """
-import io, json, os, subprocess, sys, tempfile
+import glob, io, json, os, subprocess, sys, tempfile
 from PIL import Image, ImageCms, ImageOps
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -178,6 +178,8 @@ def main():
         os.makedirs(os.path.dirname(mp4), exist_ok=True)
         os.makedirs(os.path.dirname(poster), exist_ok=True)
         subprocess.run([transcode, os.path.join(SRC, rel), mp4, '960', '1800'], check=True, capture_output=True)
+        for junk in glob.glob(mp4 + '.sb-*'):   # AVFoundation leaves temp copies next to the output
+            os.remove(junk)
         subprocess.run([frame, mp4, poster, str(POSTER_AT.get(name, 1.0))], check=True, capture_output=True)
         w, h = Image.open(poster).size
         manifest[f'videos/{name}.mp4'] = {'w': w, 'h': h}

@@ -22,11 +22,22 @@ func even(_ v: Double) -> Int { max(2, Int((v / 2).rounded()) * 2) }
 let outW = even((rotated ? dispH : dispW) * scale), outH = even((rotated ? dispW : dispH) * scale)
 
 let reader = try AVAssetReader(asset: asset)
-let vOut = AVAssetReaderTrackOutput(track: vTrack, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
+// Always hand the encoder plain SDR BT.709 pixels. iPhone clips can be HDR (HLG, BT.2020, 10-bit); copying those tags onto an
+// 8-bit H.264 file makes some desktop browsers (Chrome + hardware decoding) show a black picture with working sound.
+let sdr709: [String: Any] = [
+  AVVideoColorPrimariesKey: AVVideoColorPrimaries_ITU_R_709_2,
+  AVVideoTransferFunctionKey: AVVideoTransferFunction_ITU_R_709_2,
+  AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_709_2,
+]
+let vOut = AVAssetReaderTrackOutput(track: vTrack, outputSettings: [
+  kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+  AVVideoColorPropertiesKey: sdr709,
+])
 reader.add(vOut)
 let writer = try AVAssetWriter(outputURL: outURL, fileType: .mp4)
 let vIn = AVAssetWriterInput(mediaType: .video, outputSettings: [
   AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: outW, AVVideoHeightKey: outH,
+  AVVideoColorPropertiesKey: sdr709,
   AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: kbps * 1000, AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel, AVVideoMaxKeyFrameIntervalKey: 60],
 ])
 vIn.transform = xf

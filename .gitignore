@@ -6,3 +6,4 @@ media-source
 content-source
 .claude/launch.json
 .DS_Store
+*.sb-*
