@@ -6,11 +6,6 @@ import { sprites } from '../components/sprites';
 import { Reveal } from '../components/Reveal';
 import { StarField } from '../components/StarField';
 import { mediaUrl } from '../lib/assetUrl';
-import { figures } from '../content/figures';
-import { TwinkleCharacter } from '../components/TwinkleCharacter';
-import { useIsVisible } from '../lib/hooks';
-
-const SHELVES = [figures.slice(0, 7), figures.slice(7)];
 
 type Who = 'groom' | 'bride';
 
@@ -27,7 +22,6 @@ export function Twinkle() {
   const bubbleEl = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const [broken, setBroken] = useState(false);
-  const [shelfRef, shelfLive] = useIsVisible<HTMLDivElement>({ threshold: 0.1 });
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
@@ -136,37 +130,6 @@ export function Twinkle() {
           {bubble?.text}
         </p>
 
-        <header className="shead shead--center shead--sub">
-          <Reveal as="p" className="eyebrow">
-            {site.shelf.eyebrow}
-          </Reveal>
-          <Reveal as="h3" delay={0.06} className="shead__title shead__title--sm">
-            {site.shelf.title}
-          </Reveal>
-          <Reveal as="p" delay={0.12} className="shead__blurb">
-            {site.shelf.blurb}
-          </Reveal>
-        </header>
-
-        <Reveal variant="pop">
-          <div className="cabinet shelf" ref={shelfRef} data-active={shelfLive}>
-            {SHELVES.map((row, ri) => (
-              <div key={ri}>
-                <div className="shelf__row">
-                  {row.map((fig) => (
-                    <div className="shelf__slot" key={fig.id}>
-                      <TwinkleCharacter figure={fig} height={118} className={`tw-anim--${fig.anim}`} />
-                    </div>
-                  ))}
-                </div>
-                <div className="shelf__plank" aria-hidden="true" />
-              </div>
-            ))}
-            <p className="shelf__swipe" aria-hidden="true">
-              {site.shelf.swipe} →
-            </p>
-          </div>
-        </Reveal>
 
       </div>
     </section>

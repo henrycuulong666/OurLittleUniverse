@@ -29,14 +29,6 @@ export const site = {
     blurb: 'Hai bé này ở nhà vẫn ngoan hông? Chạm vào từng bé coi.',
   },
 
-  /** Scene 4b — the little ones on the shelf. */
-  shelf: {
-    eyebrow: 'the little ones',
-    title: 'Đủ bộ 13 bé',
-    blurb: 'Bé nào cũng có tên riêng. Chạm vô coi.',
-    swipe: 'vuốt ngang để xem đủ bộ',
-  },
-
   /** Scene 5 — the gift. Edit `message` freely; each string is one line. */
   surprise: {
     eyebrow: 'a little surprise',

@@ -13,17 +13,14 @@ interface Props {
   style?: CSSProperties;
   /** Called after the tap reaction (e.g. to also pop a bubble). */
   onTap?: () => void;
-  /** Show the figure's name on tap (default on). */
-  showName?: boolean;
 }
 
 /**
- * A tappable little figure: tiny hop, a heart floats up, its name pops up for a moment.
+ * A tappable little figure: a tiny hop, and a heart or star floats up.
  * Everything is imperative (Web Animations API) so nothing re-renders and several can be tapped at once.
  */
-export function TwinkleCharacter({ figure, height, className = '', style, onTap, showName = true }: Props) {
+export function TwinkleCharacter({ figure, height, className = '', style, onTap }: Props) {
   const img = useRef<HTMLImageElement>(null);
-  const tag = useRef<HTMLSpanElement>(null);
   const fx = useRef<HTMLSpanElement>(null);
   const w = Math.round(height * figureRatio(figure));
 
@@ -38,29 +35,10 @@ export function TwinkleCharacter({ figure, height, className = '', style, onTap,
       ],
       { duration: 560, easing: 'cubic-bezier(.3,.9,.4,1)' },
     );
-    const t = tag.current;
-    if (t && showName) {
-      t.getAnimations().forEach((a) => a.cancel());
-      t.style.marginLeft = '0px';
-      const r = t.getBoundingClientRect();
-      const vw = document.documentElement.clientWidth;
-      const shift = r.left < 8 ? 8 - r.left : r.right > vw - 8 ? vw - 8 - r.right : 0;
-      t.style.marginLeft = `${shift}px`;
-      const rise = calm ? 0 : 8;
-      t.animate(
-        [
-          { opacity: 0, transform: `translate(-50%, ${rise}px) scale(${calm ? 1 : 0.6})`, offset: 0 },
-          { opacity: 1, transform: 'translate(-50%, 0) scale(1)', offset: 0.12, easing: 'ease-out' },
-          { opacity: 1, transform: 'translate(-50%, 0) scale(1)', offset: 0.8 },
-          { opacity: 0, transform: `translate(-50%, ${-rise * 0.75}px) scale(${calm ? 1 : 0.95})`, offset: 1 },
-        ],
-        { duration: 2200, fill: 'forwards' },
-      );
-    }
     const host = fx.current;
     if (host && !calm) {
       const h = document.createElement('i');
-      h.className = 'tw-char__heart';
+      h.className = Math.random() > 0.5 ? 'tw-char__heart' : 'tw-char__star';
       host.appendChild(h);
       const dx = (Math.random() - 0.5) * 26;
       const a = h.animate(
@@ -82,7 +60,7 @@ export function TwinkleCharacter({ figure, height, className = '', style, onTap,
       className={`tw-char ${className}`}
       style={{ ...style, width: w, height }}
       onClick={react}
-      aria-label={`${figure.name} — chạm để chào`}
+      aria-label={`Bé nhỏ: ${figure.alt}. Chạm để chào`}
     >
       <img
         ref={img}
@@ -98,11 +76,6 @@ export function TwinkleCharacter({ figure, height, className = '', style, onTap,
       />
       <Pixel art={sprites.sparkle} size={3} className="tw-char__hint" />
       <span ref={fx} className="tw-char__fx" aria-hidden="true" />
-      {showName && (
-        <span ref={tag} className="tw-char__tag" aria-hidden="true">
-          {figure.name}
-        </span>
-      )}
     </button>
   );
 }

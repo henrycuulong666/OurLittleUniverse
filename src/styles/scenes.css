@@ -161,9 +161,10 @@
 }
 
 .lay { position: relative; }
-.lay__deco { position: absolute; pointer-events: none; animation: float 6s ease-in-out infinite; }
-.lay__deco--a { top: -26px; right: 8%; }
-.lay__deco--b { bottom: -10px; left: 6%; animation-delay: 1.5s; }
+.lay__deco { position: absolute; z-index: 3; pointer-events: none; animation: float 6s ease-in-out infinite; }
+.chapter--spotlight .chead { margin-bottom: 68px; } /* room for the ring + heart that sit in the gap above the photo */
+.lay--spotlight .lay__deco--a { top: -52px; right: 14px; }
+
 
 /* 01 — scatter */
 .lay--scatter { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; align-items: start; }
@@ -176,18 +177,18 @@
   .lay--scatter .slot:nth-child(3n) { margin-top: 18px !important; }
 }
 
-/* 02 — postcards */
-.lay--postcards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 14px; align-items: start; }
-.lay--postcards .slot:nth-child(even) { margin-top: 26px; }
+/* 02 — postcards: columns packed by real height (see balanceColumns in Story.tsx) */
+.lay--postcards { display: flex; gap: 14px; align-items: flex-start; }
+.pc__col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.pc__col:nth-child(even) { margin-top: 28px; }
 .lay--postcards .slot:nth-child(even) .card { --tilt: 2deg; }
 .lay--postcards .card--postcard { padding: 8px 8px 12px; }
 .lay--postcards .card--postcard::after { width: 24px; height: 30px; font-size: 0.8rem; top: 3px; right: 3px; }
 .lay--postcards .card__cap { font-size: 1.05rem; padding: 8px 2px 0; }
 @media (min-width: 820px) {
-  .lay--postcards { gap: 48px 40px; }
-  .lay--postcards .slot:nth-child(even) { margin-top: 0; }
-  .lay--postcards .slot--land { grid-column: 1 / -1; width: 68%; }
-  .lay--postcards .slot--port { width: 100%; max-width: 330px; justify-self: center; }
+  .lay--postcards { gap: 40px; }
+  .pc__col { gap: 44px; }
+  .pc__col:nth-child(even) { margin-top: 56px; }
   .lay--postcards .card--postcard { padding: 13px 13px 18px; }
   .lay--postcards .card--postcard::after { width: 38px; height: 46px; font-size: 1.1rem; top: 6px; right: 6px; }
   .lay--postcards .card__cap { font-size: 1.2rem; padding: 12px 6px 0; }
@@ -306,14 +307,12 @@
 .scrap { columns: 2; column-gap: 20px; }
 .scrap__item { display: inline-block; width: 100%; margin-bottom: 22px; break-inside: avoid; -webkit-column-break-inside: avoid; }
 @media (min-width: 760px) { .scrap { columns: 3; column-gap: 34px; } .scrap__item { margin-bottom: 40px; } }
-.moments__deco { position: absolute; animation: float 6s ease-in-out infinite; pointer-events: none; }
-.moments__deco--a { top: 7%; right: 7%; }
-.moments__deco--b { bottom: 6%; left: 6%; animation-delay: 1.4s; }
+.moments__deco { position: absolute; z-index: 2; animation: float 6s ease-in-out infinite; pointer-events: none; }
+.moments__deco--a { top: clamp(78px, 17vw, 120px); right: 22px; } /* beside the heading, never over a photo */
+.moments__deco--b { bottom: 16px; left: 26px; animation-delay: 1.4s; } /* in the quiet strip under the last photos */
 
 /* ═════════════════ SCENE 4 — TWINKLE ═════════════════ */
 .diorama-wrap { max-width: 540px; margin: 0 auto; }
-.shead--sub { margin: clamp(56px, 10vw, 90px) 0 0; }
-.shead__title--sm { font-size: clamp(1.9rem, 7vw, 2.8rem); }
 .diorama {
   --shift: 6.2%;
   position: relative;

@@ -6,6 +6,7 @@ import { Pixel } from '../components/Pixel';
 import { sprites } from '../components/sprites';
 import { Polaroid } from '../components/Polaroid';
 import { Reveal } from '../components/Reveal';
+import { useMediaQuery } from '../lib/hooks';
 import { Countdown } from '../components/Countdown';
 import { FigureBreak, TwinkleDecoration } from '../components/TwinkleDecoration';
 
@@ -66,16 +67,66 @@ function Scatter({ c }: { c: Chapter }) {
   return (
     <div className="lay lay--scatter">
       <Items media={c.media} frame="polaroid" emphasis={c.emphasis} />
-      <Pixel art={sprites.sparkle} size={4} className="lay__deco lay__deco--a" />
-      <Pixel art={sprites.star} size={3} className="lay__deco lay__deco--b" />
     </div>
   );
 }
 
+/**
+ * Spread the cards over `cols` columns so the columns end at nearly the same height.
+ * Heights come from each photo's real aspect ratio (+ frame and caption), so a tall video beside a small
+ * landscape no longer leaves a hole. Cards keep their order inside each column.
+ * Tries every assignment (a handful of cards → at most a few hundred combinations).
+ */
+function balanceColumns(media: MediaItem[], cols: number): { m: MediaItem; i: number }[][] {
+  const est = media.map((m) => {
+    const [w, h] = m.ratio.split('/').map(Number);
+    return h / w + 0.16 + (m.caption || m.date ? 0.1 : 0);
+  });
+  const stagger = (k: number) => (k % 2 ? 0.16 : 0); // every other column starts a little lower (scrapbook feel)
+  const n = media.length;
+  let best: number[] = new Array(n).fill(0);
+  let bestCost = Infinity;
+  const cur: number[] = new Array(n).fill(0);
+  const walk = (i: number) => {
+    if (i === n) {
+      const hs = Array.from({ length: cols }, (_, k) => stagger(k));
+      cur.forEach((k, j) => (hs[k] += est[j]));
+      // "reading order" tie-break: prefer assignments that stay close to left-to-right, top-to-bottom
+      let disorder = 0;
+      for (let j = 1; j < n; j++) if (cur[j] < cur[j - 1]) disorder += 0.01;
+      const cost = Math.max(...hs) - Math.min(...hs) + disorder;
+      if (cost < bestCost - 1e-9) {
+        bestCost = cost;
+        best = cur.slice();
+      }
+      return;
+    }
+    for (let k = 0; k < cols; k++) {
+      cur[i] = k;
+      walk(i + 1);
+    }
+  };
+  if (cols ** n <= 20000) walk(0);
+  else media.forEach((_, j) => (best[j] = j % cols));
+  const out: { m: MediaItem; i: number }[][] = Array.from({ length: cols }, () => []);
+  media.forEach((m, i) => out[best[i]].push({ m, i }));
+  return out;
+}
+
 function Postcards({ c }: { c: Chapter }) {
+  const wide = useMediaQuery('(min-width: 820px)');
+  const columns = balanceColumns(c.media, wide ? 3 : 2);
   return (
     <div className="lay lay--postcards">
-      <Items media={c.media} frame="postcard" emphasis={c.emphasis} />
+      {columns.map((col, ci) => (
+        <div className="pc__col" key={ci}>
+          {col.map(({ m, i }) => (
+            <Reveal key={m.id} delay={(i % 3) * 0.06} variant={c.emphasis === 'feature' ? 'feature' : 'quiet'} className={`slot slot--${i + 1}`}>
+              <Polaroid item={m} group={c.media} index={i} frame="postcard" />
+            </Reveal>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
@@ -86,7 +137,6 @@ function Spotlight({ c }: { c: Chapter }) {
       <Items media={c.media} frame="plain" emphasis={c.emphasis} />
       <Pixel art={sprites.ring} size={7} className="lay__ring" />
       <Pixel art={sprites.heart} size={4} className="lay__deco lay__deco--a" />
-      <Pixel art={sprites.sparkle} size={4} className="lay__deco lay__deco--b" />
     </div>
   );
 }
