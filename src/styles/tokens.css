@@ -1,0 +1,32 @@
+:root {
+  /* palette */
+  --ivory: #fbf5e6;
+  --cream: #fffbf0;
+  --white: #fffdf7;
+  --paper: #f4e9cd;
+  --butter: #f8d878;
+  --butter-soft: #fdeebb;
+  --gold: #e3a93c;
+  --champagne: #ebddbc;
+  --champagne-deep: #c4ad7c;
+  --cherry: #d3303f;
+  --cherry-deep: #a61f2d;
+  --charcoal: #2f2825;
+  --ink-soft: #6a5d55;
+  --night: #241c1a;
+  --night-2: #35272a;
+  --fur: #f9d96a;
+  --fur-edge: #e2b648;
+
+  /* type */
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-hand: 'Patrick Hand', 'Bradley Hand', 'Segoe Print', cursive;
+  --font-pixel: 'Pixelify Sans', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* motion & layout */
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --gutter: clamp(20px, 5.5vw, 48px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
