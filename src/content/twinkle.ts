@@ -8,7 +8,7 @@
 export const twinkle = {
   couple: 'figures/couple.webp',
   coupleAlt: 'Hai bé Twinkle Twinkle: chú rể đội nón và cô dâu thắt nơ lớn, nắm tay nhau',
-  hint: 'chạm vào từng bé nhé',
+  hint: 'chạm vào từng bé nè',
 
   /** Speech bubbles. Tap the left bé → groom lines; tap the right bé → bride lines. */
   lines: {
